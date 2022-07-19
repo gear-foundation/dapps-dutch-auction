@@ -1,6 +1,7 @@
 #![no_std]
 
 use codec::Encode;
+use core::cmp::min;
 use gstd::{exec::block_timestamp, msg, prelude::*, ActorId};
 use primitive_types::U256;
 
@@ -66,8 +67,11 @@ impl Auction {
 
     fn token_price(&self) -> u128 {
         // time_elapsed is in seconds
-        let time_elapsed = (block_timestamp() - self.started_at) / 1000;
-        let discount = self.discount_rate * (time_elapsed as u128);
+        let time_elapsed = block_timestamp().saturating_sub(self.started_at) / 1000;
+        let discount = min(
+            self.discount_rate * (time_elapsed as u128),
+            self.starting_price,
+        );
 
         self.starting_price - discount
     }
@@ -136,7 +140,7 @@ impl Auction {
             starting_price: self.starting_price,
             current_price: self.token_price(),
             discount_rate: self.discount_rate,
-            time_left: self.expires_at - block_timestamp(),
+            time_left: self.expires_at.saturating_sub(block_timestamp()),
         }
     }
 }
