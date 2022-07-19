@@ -65,7 +65,8 @@ impl Auction {
     }
 
     fn token_price(&self) -> u128 {
-        let time_elapsed = block_timestamp() - self.started_at;
+        // time_elapsed is in seconds
+        let time_elapsed = (block_timestamp() - self.started_at) / 1000;
         let discount = self.discount_rate * (time_elapsed as u128);
 
         self.starting_price - discount
@@ -78,7 +79,7 @@ impl Auction {
 
         let hours_count = config.duration.days * 24 + config.duration.hours;
         let minutes_count = hours_count * 60 + config.duration.minutes;
-        let duration = minutes_count * 60 * 1000;
+        let duration_in_seconds = minutes_count * 60;
 
         if config.starting_price < config.discount_rate * (duration as u128) {
             panic!("starting price < min");
@@ -86,7 +87,7 @@ impl Auction {
 
         self.is_active = true;
         self.started_at = block_timestamp();
-        self.expires_at = block_timestamp() + duration;
+        self.expires_at = block_timestamp() + duration_in_seconds * 1000;
         self.nft.token_id = config.token_id;
         self.nft.contract_id = config.nft_contract_actor_id;
         self.nft.owner = config.token_owner;
@@ -133,14 +134,15 @@ impl Auction {
             token_id: self.nft.token_id,
             token_owner: self.nft.owner,
             starting_price: self.starting_price,
+            current_price: self.token_price(),
+            discount_rate: self.discount_rate,
+            time_left: self.expires_at - block_timestamp(),
         }
     }
 }
 
 gstd::metadata! {
     title: "Auction",
-    init:
-        input: InitConfig,
     handle:
         input: Action,
         output: Event,
@@ -181,7 +183,6 @@ pub unsafe extern "C" fn meta_state() -> *mut [i32; 2] {
     auction.stop_if_time_is_over();
 
     let encoded = match query {
-        State::TokenPrice() => StateReply::TokenPrice(auction.token_price()),
         State::IsActive() => StateReply::IsActive(auction.is_active),
         State::Info() => StateReply::Info(auction.info()),
     }

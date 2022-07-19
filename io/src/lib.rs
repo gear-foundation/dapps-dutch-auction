@@ -26,9 +26,6 @@ pub enum Event {
 }
 
 #[derive(Debug, Encode, Decode, TypeInfo)]
-pub struct InitConfig {}
-
-#[derive(Debug, Encode, Decode, TypeInfo)]
 pub struct Duration {
     pub days: u64,
     pub hours: u64,
