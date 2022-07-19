@@ -81,7 +81,7 @@ impl Auction {
         let minutes_count = hours_count * 60 + config.duration.minutes;
         let duration_in_seconds = minutes_count * 60;
 
-        if config.starting_price < config.discount_rate * (duration as u128) {
+        if config.starting_price < config.discount_rate * (duration_in_seconds as u128) {
             panic!("starting price < min");
         }
 
