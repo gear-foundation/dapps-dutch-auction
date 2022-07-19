@@ -19,6 +19,9 @@ pub enum Event {
         price: u128,
         token_id: U256,
     },
+    Bought {
+        price: u128,
+    },
     AuctionStoped {
         token_owner: ActorId,
         token_id: U256,

@@ -7,7 +7,7 @@ use primitive_types::U256;
 pub mod state;
 pub use state::{AuctionInfo, State, StateReply};
 
-pub use auction_io::{Action, CreateConfig, Event, InitConfig};
+pub use auction_io::*;
 
 #[derive(Debug, Default)]
 pub struct NFT {
@@ -48,7 +48,7 @@ impl Auction {
         self.is_active = false;
         let refund = msg::value() - price;
 
-        let _transfer_response: Vec<u8> = msg::send_and_wait_for_reply(
+        msg::send_for_reply(
             self.nft.contract_id,
             nft_io::NFTAction::Transfer {
                 to: msg::source(),
@@ -60,8 +60,8 @@ impl Auction {
         .await
         .expect("Error in nft transfer");
 
-        msg::send(msg::source(), "", refund).expect("Couldn't send refund");
-        msg::send(self.nft.owner, "", price).expect("Couldn't send payment for nft owner");
+        msg::send(self.nft.owner, "REWARD", price).expect("Couldn't send payment for nft owner");
+        msg::reply(Event::Bought { price }, refund).expect("Can't send refund and reply");
     }
 
     fn token_price(&self) -> u128 {
