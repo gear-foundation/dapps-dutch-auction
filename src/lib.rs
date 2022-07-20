@@ -76,7 +76,7 @@ impl Auction {
         self.starting_price - discount
     }
 
-    fn renew_contract(&mut self, config: CreateConfig) {
+    async fn renew_contract(&mut self, config: CreateConfig) {
         if self.is_active {
             panic!("already in use")
         }
@@ -94,6 +94,18 @@ impl Auction {
         self.expires_at = block_timestamp() + duration_in_seconds * 1000;
         self.nft.token_id = config.token_id;
         self.nft.contract_id = config.nft_contract_actor_id;
+        // let owner: Vec<u8> = msg::send_for_reply_as(
+        //     self.nft.contract_id,
+        //     nft_io::NFTAction::Owner {
+        //         token_id: config.token_id,
+        //     },
+        //     0,
+        // )
+        // .expect("Can't send message")
+        // .await
+        // .expect("Error in nft owner");
+        //
+        // let decoded_owner = ActorId::decode(&mut &owner[..]).expect("Error in decoding payouts");
         self.nft.owner = config.token_owner;
         self.discount_rate = config.discount_rate;
         self.starting_price = config.starting_price;
@@ -174,7 +186,7 @@ async unsafe fn main() {
 
     match action {
         Action::Buy => auction.buy().await,
-        Action::Create(config) => auction.renew_contract(config),
+        Action::Create(config) => auction.renew_contract(config).await,
         Action::ForceStop => auction.force_stop(),
     }
 }

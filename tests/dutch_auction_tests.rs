@@ -1,5 +1,6 @@
 use auction_io::*;
 use codec::Encode;
+use gstd::ActorId;
 use gtest::System;
 
 mod routines;
@@ -10,6 +11,11 @@ fn buy() {
     let sys = System::new();
 
     let auction = init(&sys);
+
+    let nft_program = sys.get_program(2);
+    let res = nft_owner(&nft_program, USERS[0], 0.into());
+    println!("{:?}", res.decoded_log::<ActorId>());
+
     let result = auction.send_with_value(USERS[1], Action::Buy, 1_000_000_000);
 
     assert!(result.contains(&(
@@ -19,6 +25,12 @@ fn buy() {
         }
         .encode()
     )));
+
+    let res = nft_owner(&nft_program, USERS[0], 0.into());
+    let new_owner = ActorId::from(USERS[1]);
+    println!("{:?}", res.decoded_log::<ActorId>());
+
+    assert!(res.contains(&(USERS[0], new_owner.encode(),)));
 
     sys.claim_value_from_mailbox(USERS[0]);
 
