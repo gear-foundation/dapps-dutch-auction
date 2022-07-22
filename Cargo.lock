@@ -398,7 +398,7 @@ dependencies = [
 [[package]]
 name = "gear-lib"
 version = "0.1.0"
-source = "git+https://github.com/gear-dapps/gear-lib.git?branch=feature/add-getting-owner#b7c1b95e47ee6f1a20dbabbb03b30e4ab99f09b0"
+source = "git+https://github.com/gear-dapps/gear-lib.git#45bcbccbb6bc52b864013de729456f639c4cd3e7"
 dependencies = [
  "gstd",
  "parity-scale-codec",
@@ -568,7 +568,7 @@ checksum = "71d96e3f3c0b6325d8ccd83c33b28acb183edcb6c67938ba104ec546854b0882"
 [[package]]
 name = "nft-io"
 version = "0.1.0"
-source = "git+https://github.com/gear-dapps/non-fungible-token.git?branch=add-owner-by-id#960b22d24c3979449fa81f8754680544378219ce"
+source = "git+https://github.com/gear-dapps/non-fungible-token.git#ee052c1b92ae037458df51f8de82d8fae425b73d"
 dependencies = [
  "gear-lib",
  "gstd",
