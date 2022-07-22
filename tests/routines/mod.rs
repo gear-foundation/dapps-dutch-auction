@@ -1,7 +1,7 @@
 use auction_io::*;
 use codec::Encode;
 use gear_lib::non_fungible_token::token::*;
-// use gstd::ActorId;
+use gstd::ActorId;
 use gtest::{Program, RunResult, System};
 
 pub const USERS: &[u64] = &[4, 5, 6];
@@ -37,7 +37,7 @@ pub fn init(sys: &System) -> Program {
 }
 
 pub fn init_nft(sys: &System, owner: u64) {
-    let nft_program = Program::from_file(sys, "/Users/louise/gear-academy/non-fungible-token/target/wasm32-unknown-unknown/release/nft.wasm");
+    let nft_program = Program::from_file(sys, "./target/nft.wasm");
 
     let res = nft_program.send(
         owner,
@@ -65,9 +65,9 @@ pub fn init_nft(sys: &System, owner: u64) {
 
     assert!(!res.main_failed());
 
-    // let res = nft_owner(&nft_program, owner, 0.into());
-    // let new_owner = ActorId::from(owner);
-    // assert!(res.contains(&(owner, new_owner.encode(),)));
+    let res = nft_owner(&nft_program, owner, 0.into());
+    let new_owner = ActorId::from(owner);
+    assert!(res.contains(&(owner, new_owner.encode().encode())));
 
     let res = nft_program.send(
         owner,
@@ -82,22 +82,21 @@ pub fn init_nft(sys: &System, owner: u64) {
 
 pub fn update_auction(
     auction: &Program,
-    owner: u64,
+    from: u64,
     nft_contract_id: u64,
     starting_price: u128,
 ) -> RunResult {
     auction.send(
-        owner,
+        from,
         Action::Create(CreateConfig {
             nft_contract_actor_id: nft_contract_id.into(),
-            token_owner: owner.into(),
             starting_price,
             discount_rate: 1_000,
             token_id: 0.into(),
             duration: Duration {
-                days: 7,
-                hours: 0,
+                hours: 168,
                 minutes: 0,
+                seconds: 0,
             },
         }),
     )
