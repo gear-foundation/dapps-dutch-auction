@@ -23,9 +23,9 @@ dependencies = [
 
 [[package]]
 name = "anyhow"
-version = "1.0.63"
+version = "1.0.64"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a26fa4d7e3f2eebadf743988fc8aec9fa9a9e82611acafd77c1462ed6262440a"
+checksum = "b9a8f622bcf6ff3df478e9deba3e03e4e04b300f8e6a139e192c05fa3490afc7"
 
 [[package]]
 name = "arrayref"
@@ -511,7 +511,7 @@ dependencies = [
 [[package]]
 name = "galloc"
 version = "0.1.0"
-source = "git+https://github.com/gear-tech/gear.git#41d227ff0287f0e8a51b6281730f190523504b25"
+source = "git+https://github.com/gear-tech/gear.git#bc3daf67ba01e5c36d23758fe8c427ba02eb7b07"
 dependencies = [
  "dlmalloc",
 ]
@@ -519,7 +519,7 @@ dependencies = [
 [[package]]
 name = "gcore"
 version = "0.1.0"
-source = "git+https://github.com/gear-tech/gear.git#41d227ff0287f0e8a51b6281730f190523504b25"
+source = "git+https://github.com/gear-tech/gear.git#bc3daf67ba01e5c36d23758fe8c427ba02eb7b07"
 dependencies = [
  "gear-core-errors",
  "parity-scale-codec",
@@ -574,7 +574,7 @@ dependencies = [
 [[package]]
 name = "gear-core-errors"
 version = "0.1.0"
-source = "git+https://github.com/gear-tech/gear.git#41d227ff0287f0e8a51b6281730f190523504b25"
+source = "git+https://github.com/gear-tech/gear.git#bc3daf67ba01e5c36d23758fe8c427ba02eb7b07"
 dependencies = [
  "derive_more",
  "parity-scale-codec",
@@ -647,7 +647,7 @@ dependencies = [
 [[package]]
 name = "gstd"
 version = "0.1.0"
-source = "git+https://github.com/gear-tech/gear.git#41d227ff0287f0e8a51b6281730f190523504b25"
+source = "git+https://github.com/gear-tech/gear.git#bc3daf67ba01e5c36d23758fe8c427ba02eb7b07"
 dependencies = [
  "bs58",
  "futures",
@@ -664,7 +664,7 @@ dependencies = [
 [[package]]
 name = "gstd-codegen"
 version = "0.1.0"
-source = "git+https://github.com/gear-tech/gear.git#41d227ff0287f0e8a51b6281730f190523504b25"
+source = "git+https://github.com/gear-tech/gear.git#bc3daf67ba01e5c36d23758fe8c427ba02eb7b07"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -868,7 +868,7 @@ dependencies = [
 [[package]]
 name = "nft-io"
 version = "0.1.0"
-source = "git+https://github.com/gear-dapps/non-fungible-token.git#22bd6cc992bb34186a5bda4af7fcc376936551b6"
+source = "git+https://github.com/gear-dapps/non-fungible-token.git#e2e94406e59b98efdf6e608d8ec11698727645ca"
 dependencies = [
  "gear-lib",
  "gstd",
@@ -1368,7 +1368,7 @@ checksum = "f0ea32af43239f0d353a7dd75a22d94c329c8cdaafdcb4c1c1335aa10c298a4a"
 [[package]]
 name = "sp-core"
 version = "6.0.0"
-source = "git+https://github.com/gear-tech/substrate.git?branch=gear-stable#abc134523a276ba867ec4ebd10dc16069401a9ed"
+source = "git+https://github.com/gear-tech/substrate.git?branch=gear-stable#fad75ee20b2a3dbfb54453463a7d50f08cc77f47"
 dependencies = [
  "bitflags",
  "blake2-rfc",
@@ -1400,7 +1400,7 @@ dependencies = [
 [[package]]
 name = "sp-core-hashing"
 version = "4.0.0"
-source = "git+https://github.com/gear-tech/substrate.git?branch=gear-stable#abc134523a276ba867ec4ebd10dc16069401a9ed"
+source = "git+https://github.com/gear-tech/substrate.git?branch=gear-stable#fad75ee20b2a3dbfb54453463a7d50f08cc77f47"
 dependencies = [
  "blake2",
  "byteorder",
@@ -1414,7 +1414,7 @@ dependencies = [
 [[package]]
 name = "sp-debug-derive"
 version = "4.0.0"
-source = "git+https://github.com/gear-tech/substrate.git?branch=gear-stable#abc134523a276ba867ec4ebd10dc16069401a9ed"
+source = "git+https://github.com/gear-tech/substrate.git?branch=gear-stable#fad75ee20b2a3dbfb54453463a7d50f08cc77f47"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1424,7 +1424,7 @@ dependencies = [
 [[package]]
 name = "sp-externalities"
 version = "0.12.0"
-source = "git+https://github.com/gear-tech/substrate.git?branch=gear-stable#abc134523a276ba867ec4ebd10dc16069401a9ed"
+source = "git+https://github.com/gear-tech/substrate.git?branch=gear-stable#fad75ee20b2a3dbfb54453463a7d50f08cc77f47"
 dependencies = [
  "environmental",
  "parity-scale-codec",
@@ -1435,7 +1435,7 @@ dependencies = [
 [[package]]
 name = "sp-runtime-interface"
 version = "6.0.0"
-source = "git+https://github.com/gear-tech/substrate.git?branch=gear-stable#abc134523a276ba867ec4ebd10dc16069401a9ed"
+source = "git+https://github.com/gear-tech/substrate.git?branch=gear-stable#fad75ee20b2a3dbfb54453463a7d50f08cc77f47"
 dependencies = [
  "impl-trait-for-tuples",
  "parity-scale-codec",
@@ -1452,7 +1452,7 @@ dependencies = [
 [[package]]
 name = "sp-runtime-interface-proc-macro"
 version = "5.0.0"
-source = "git+https://github.com/gear-tech/substrate.git?branch=gear-stable#abc134523a276ba867ec4ebd10dc16069401a9ed"
+source = "git+https://github.com/gear-tech/substrate.git?branch=gear-stable#fad75ee20b2a3dbfb54453463a7d50f08cc77f47"
 dependencies = [
  "Inflector",
  "proc-macro-crate",
@@ -1464,12 +1464,12 @@ dependencies = [
 [[package]]
 name = "sp-std"
 version = "4.0.0"
-source = "git+https://github.com/gear-tech/substrate.git?branch=gear-stable#abc134523a276ba867ec4ebd10dc16069401a9ed"
+source = "git+https://github.com/gear-tech/substrate.git?branch=gear-stable#fad75ee20b2a3dbfb54453463a7d50f08cc77f47"
 
 [[package]]
 name = "sp-storage"
 version = "6.0.0"
-source = "git+https://github.com/gear-tech/substrate.git?branch=gear-stable#abc134523a276ba867ec4ebd10dc16069401a9ed"
+source = "git+https://github.com/gear-tech/substrate.git?branch=gear-stable#fad75ee20b2a3dbfb54453463a7d50f08cc77f47"
 dependencies = [
  "parity-scale-codec",
  "ref-cast",
@@ -1480,7 +1480,7 @@ dependencies = [
 [[package]]
 name = "sp-tracing"
 version = "5.0.0"
-source = "git+https://github.com/gear-tech/substrate.git?branch=gear-stable#abc134523a276ba867ec4ebd10dc16069401a9ed"
+source = "git+https://github.com/gear-tech/substrate.git?branch=gear-stable#fad75ee20b2a3dbfb54453463a7d50f08cc77f47"
 dependencies = [
  "parity-scale-codec",
  "sp-std",
@@ -1491,7 +1491,7 @@ dependencies = [
 [[package]]
 name = "sp-wasm-interface"
 version = "6.0.0"
-source = "git+https://github.com/gear-tech/substrate.git?branch=gear-stable#abc134523a276ba867ec4ebd10dc16069401a9ed"
+source = "git+https://github.com/gear-tech/substrate.git?branch=gear-stable#fad75ee20b2a3dbfb54453463a7d50f08cc77f47"
 dependencies = [
  "impl-trait-for-tuples",
  "parity-scale-codec",
@@ -1570,18 +1570,18 @@ dependencies = [
 
 [[package]]
 name = "thiserror"
-version = "1.0.33"
+version = "1.0.34"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3d0a539a918745651435ac7db7a18761589a94cd7e94cd56999f828bf73c8a57"
+checksum = "8c1b05ca9d106ba7d2e31a9dab4a64e7be2cce415321966ea3132c49a656e252"
 dependencies = [
  "thiserror-impl",
 ]
 
 [[package]]
 name = "thiserror-impl"
-version = "1.0.33"
+version = "1.0.34"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c251e90f708e16c49a16f4917dc2131e75222b72edfa9cb7f7c58ae56aae0c09"
+checksum = "e8f2591983642de85c921015f3f070c665a197ed69e417af436115e3a1407487"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1663,9 +1663,8 @@ checksum = "49874b5167b65d7193b8aba1567f5c7d93d001cafc34600cee003eda787e483f"
 
 [[package]]
 name = "wasm-instrument"
-version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8bca81f5279342b38b17d9acbf007a46ddeb73144e2bd5f0a21bfa9fc5d4ab3e"
+version = "0.2.1"
+source = "git+https://github.com/gear-tech/wasm-instrument.git?branch=gear-stable#7cceecba3c5904855cbb3930fba0a8349e2824f9"
 dependencies = [
  "parity-wasm 0.45.0",
 ]
