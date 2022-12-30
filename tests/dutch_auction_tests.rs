@@ -148,7 +148,7 @@ fn create_and_stop() {
 
     assert!(result.contains(&(
         owner_user,
-        Event::AuctionStoped {
+        Event::AuctionStopped {
             token_owner: owner_user.into(),
             token_id: 0.into(),
         }

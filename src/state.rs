@@ -20,7 +20,7 @@ pub enum StateReply {
 #[scale_info(crate = gstd::scale_info)]
 pub enum Status {
     #[default]
-    None,
+    ReadyToStart,
     IsRunning,
     Purchased {
         price: u128,

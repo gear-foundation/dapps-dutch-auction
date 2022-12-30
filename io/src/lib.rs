@@ -24,13 +24,14 @@ pub enum Event {
     Bought {
         price: u128,
     },
-    AuctionStoped {
+    AuctionStopped {
         token_owner: ActorId,
         token_id: U256,
     },
+    TransactionFailed,
 }
 
-#[derive(Debug, Encode, Decode, TypeInfo)]
+#[derive(Debug, Clone, Copy, Default, Encode, Decode, TypeInfo)]
 #[codec(crate = gstd::codec)]
 #[scale_info(crate = gstd::scale_info)]
 pub struct Duration {
@@ -39,7 +40,7 @@ pub struct Duration {
     pub seconds: u64,
 }
 
-#[derive(Debug, Encode, Decode, TypeInfo)]
+#[derive(Debug, Clone, Copy, Default, Encode, Decode, TypeInfo)]
 #[codec(crate = gstd::codec)]
 #[scale_info(crate = gstd::scale_info)]
 pub struct CreateConfig {
