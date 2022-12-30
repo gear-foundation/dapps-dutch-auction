@@ -6,13 +6,9 @@ license = "MIT"
 authors = ["Gear Technologies"]
 
 [dependencies]
-gstd = { git = "https://github.com/gear-tech/gear.git", features = [
-    "debug",
-], branch = "stable" }
+gstd = { git = "https://github.com/gear-tech/gear.git", features = ["debug"], branch = "stable" }
 auction-io = { path = "io" }
-primitive-types = { version = "0.12.1", default-features = false, features = [
-    "scale-info",
-] }
+primitive-types = { version = "0.12.1", default-features = false, features = ["scale-info"] }
 nft-io = { git = "https://github.com/gear-dapps/non-fungible-token.git", tag = "0.2.5" }
 gear-lib = { git = "https://github.com/gear-dapps/gear-lib.git", tag = "0.3.3" }
 
@@ -20,8 +16,7 @@ gear-lib = { git = "https://github.com/gear-dapps/gear-lib.git", tag = "0.3.3" }
 gtest = { git = "https://github.com/gear-tech/gear.git", branch = "stable" }
 sp-core = { version = "6.0.0", git = "https://github.com/gear-tech/substrate.git", branch = "gear-stable" }
 gclient = { git = "https://github.com/gear-tech/gear.git", branch = "master" }
-tokio = { version = "1.21.2", features = ["full"] }
-# gear-core = { git = "https://github.com/gear-tech/gear.git", branch = "stable" }
+tokio = { version = "1.23.0", features = ["full"] }
 
 [build-dependencies]
 gear-wasm-builder = { git = "https://github.com/gear-tech/gear.git", branch = "stable" }

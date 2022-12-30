@@ -59,8 +59,7 @@ async fn buy() -> Result<()> {
         .calculate_handle_gas(None, program_id, mint_payload.encode(), 0, true, None)
         .await?;
 
-    let (_message_id, _) = api
-        .send_message(program_id, mint_payload, gas_info.min_limit, 0)
+    api.send_message(program_id, mint_payload, gas_info.min_limit, 0)
         .await?;
 
     let action = Action::Create(CreateConfig {
