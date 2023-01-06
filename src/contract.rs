@@ -1,7 +1,8 @@
 use crate::state::*;
 use auction_io::auction::Auction;
 use auction_io::io::*;
-use gstd::{msg, prelude::*};
+use gmeta::Metadata;
+use gstd::{errors::Result as GstdResult, msg, prelude::*, MessageId};
 
 static mut AUCTION: Option<Auction> = None;
 
@@ -52,4 +53,29 @@ extern "C" fn meta_state() -> *mut [i32; 2] {
     .encode();
 
     gstd::util::to_leak_ptr(encoded)
+}
+
+fn common_state() -> <AuctionMetadata as Metadata>::State {
+    static_mut_state().clone()
+}
+
+fn static_mut_state() -> &'static mut Auction {
+    unsafe { AUCTION.get_or_insert(Default::default()) }
+}
+
+#[no_mangle]
+extern "C" fn state() {
+    reply(common_state()).expect(
+        "Failed to encode or reply with `<AuctionMetadata as Metadata>::State` from `state()`",
+    );
+}
+
+#[no_mangle]
+extern "C" fn metahash() {
+    reply(include!("../.metahash"))
+        .expect("Failed to encode or reply with `[u8; 32]` from `metahash()`");
+}
+
+fn reply(payload: impl Encode) -> GstdResult<MessageId> {
+    msg::reply(payload, 0)
 }
