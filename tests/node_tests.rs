@@ -1,4 +1,4 @@
-use dutch_auction::{Action, CreateConfig, Duration};
+use auction_io::io::*;
 use gclient::{EventProcessor, GearApi, Result};
 use gear_lib::non_fungible_token::token::TokenMetadata;
 use gstd::prelude::*;

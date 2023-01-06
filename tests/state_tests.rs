@@ -1,5 +1,5 @@
-use auction_io::*;
-use dutch_auction::{State, StateReply, Status};
+use auction_io::{auction::*, io::Action};
+use dutch_auction::state::{State, StateReply};
 use gtest::System;
 
 mod routines;

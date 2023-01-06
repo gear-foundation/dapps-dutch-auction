@@ -192,7 +192,7 @@ version = "0.1.1"
 dependencies = [
  "gmeta 0.1.0 (git+https://github.com/gear-tech/gear)",
  "gstd 0.1.0 (git+https://github.com/gear-tech/gear.git?branch=stable)",
- "nft-io",
+ "nft-io 0.2.5",
  "parity-scale-codec",
  "primitive-types",
  "scale-info",
@@ -1045,7 +1045,7 @@ dependencies = [
  "gmeta 0.1.0 (git+https://github.com/gear-tech/gear)",
  "gstd 0.1.0 (git+https://github.com/gear-tech/gear.git?branch=stable)",
  "gtest",
- "nft-io",
+ "nft-io 0.2.8",
  "primitive-types",
  "sp-core 6.0.0",
  "tokio",
@@ -3193,6 +3193,17 @@ version = "0.2.5"
 source = "git+https://github.com/gear-dapps/non-fungible-token.git?tag=0.2.5#ed6fa8d2dc0fb94b977aca94b763ff8e2cee471b"
 dependencies = [
  "gear-lib 0.3.3",
+ "gstd 0.1.0 (git+https://github.com/gear-tech/gear.git?branch=stable)",
+ "primitive-types",
+]
+
+[[package]]
+name = "nft-io"
+version = "0.2.8"
+source = "git+https://github.com/gear-dapps/non-fungible-token.git?branch=new_meta#862dc8d7c546e122d5a696a04c4fc943752f2be7"
+dependencies = [
+ "gear-lib 0.3.4",
+ "gmeta 0.1.0 (git+https://github.com/gear-tech/gear)",
  "gstd 0.1.0 (git+https://github.com/gear-tech/gear.git?branch=stable)",
  "primitive-types",
 ]
