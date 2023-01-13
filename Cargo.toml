@@ -23,3 +23,8 @@ tokio = { version = "1.23.0", features = ["full"] }
 gear-wasm-builder = { git = "https://github.com/gear-tech/gear.git" }
 auction-io = { path = "io" }
 
+[workspace]
+members = ["state"]
+
+[features]
+binary-vendor = []

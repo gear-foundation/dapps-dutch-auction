@@ -1,17 +1,13 @@
 use auction_io::io::*;
+use dutch_auction::WASM_BINARY_OPT;
 use gclient::{EventProcessor, GearApi, Result};
 use gear_lib::non_fungible_token::token::TokenMetadata;
 use gstd::prelude::*;
 use gstd::{ActorId, Encode};
 use nft_io::*;
 
-#[cfg(debug_assertions)]
-const PATH: &str = "../target/wasm32-unknown-unknown/debug/dutch_auction.opt.wasm";
-
-#[cfg(not(debug_assertions))]
-const PATH: &str = "../target/wasm32-unknown-unknown/release/dutch_auction.opt.wasm";
-
 #[tokio::test]
+#[ignore]
 async fn buy() -> Result<()> {
     let api = GearApi::dev().await?;
 
@@ -25,18 +21,17 @@ async fn buy() -> Result<()> {
     }
     .encode();
     let gas_info = api
-        .calculate_upload_gas(
-            None,
-            gclient::code_from_os(PATH)?,
-            init_nft.clone(),
-            0,
-            true,
-            None,
-        )
+        .calculate_upload_gas(None, WASM_BINARY_OPT.into(), init_nft.clone(), 0, true)
         .await?;
 
     let (message_id, program_id, _hash) = api
-        .upload_program_bytes_by_path(PATH, gclient::bytes_now(), init_nft, gas_info.min_limit, 0)
+        .upload_program_bytes(
+            WASM_BINARY_OPT.to_vec(),
+            gclient::bytes_now(),
+            init_nft,
+            gas_info.min_limit,
+            0,
+        )
         .await?;
 
     assert!(listener.message_processed(message_id).await?.succeed());
@@ -56,7 +51,7 @@ async fn buy() -> Result<()> {
     };
 
     let gas_info = api
-        .calculate_handle_gas(None, program_id, mint_payload.encode(), 0, true, None)
+        .calculate_handle_gas(None, program_id, mint_payload.encode(), 0, true)
         .await?;
 
     api.send_message(program_id, mint_payload, gas_info.min_limit, 0)
@@ -77,7 +72,7 @@ async fn buy() -> Result<()> {
     let action_payload = action.encode();
 
     let gas_info = api
-        .calculate_handle_gas(None, program_id, action_payload, 0, true, None)
+        .calculate_handle_gas(None, program_id, action_payload, 0, true)
         .await?;
 
     let (message_id, _) = api
@@ -93,6 +88,7 @@ async fn buy() -> Result<()> {
 }
 
 #[tokio::test]
+#[ignore]
 async fn create_and_stop() -> Result<()> {
     let api = GearApi::dev().await?;
 
@@ -106,18 +102,17 @@ async fn create_and_stop() -> Result<()> {
     }
     .encode();
     let gas_info = api
-        .calculate_upload_gas(
-            None,
-            gclient::code_from_os(PATH)?,
-            init_nft.clone(),
-            0,
-            true,
-            None,
-        )
+        .calculate_upload_gas(None, WASM_BINARY_OPT.into(), init_nft.clone(), 0, true)
         .await?;
 
     let (message_id, program_id, _hash) = api
-        .upload_program_bytes_by_path(PATH, gclient::bytes_now(), init_nft, gas_info.min_limit, 0)
+        .upload_program_bytes(
+            WASM_BINARY_OPT.to_vec(),
+            gclient::bytes_now(),
+            init_nft,
+            gas_info.min_limit,
+            0,
+        )
         .await?;
 
     assert!(listener.message_processed(message_id).await?.succeed());
@@ -137,7 +132,7 @@ async fn create_and_stop() -> Result<()> {
     };
 
     let gas_info = api
-        .calculate_handle_gas(None, program_id, mint_payload.encode(), 0, true, None)
+        .calculate_handle_gas(None, program_id, mint_payload.encode(), 0, true)
         .await?;
 
     let (_message_id, _) = api
@@ -159,7 +154,7 @@ async fn create_and_stop() -> Result<()> {
     let action_payload = action.encode();
 
     let gas_info = api
-        .calculate_handle_gas(None, program_id, action_payload, 0, true, None)
+        .calculate_handle_gas(None, program_id, action_payload, 0, true)
         .await?;
 
     let (message_id, _) = api
