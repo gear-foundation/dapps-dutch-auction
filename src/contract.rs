@@ -1,20 +1,9 @@
-use crate::state::*;
 use auction_io::auction::Auction;
 use auction_io::io::*;
 use gmeta::Metadata;
 use gstd::{errors::Result as GstdResult, msg, prelude::*, MessageId};
 
 static mut AUCTION: Option<Auction> = None;
-
-gstd::metadata! {
-    title: "Auction",
-    handle:
-        input: Action,
-        output: Event,
-    state:
-        input: State,
-        output: StateReply,
-}
 
 #[no_mangle]
 extern "C" fn init() {
@@ -38,21 +27,6 @@ async fn main() {
         Action::Create(config) => auction.renew_contract(config).await,
         Action::ForceStop => auction.force_stop(),
     }
-}
-
-#[no_mangle]
-extern "C" fn meta_state() -> *mut [i32; 2] {
-    let query: State = msg::load().expect("failed to decode input argument");
-    let auction: &mut Auction = unsafe { AUCTION.get_or_insert(Auction::default()) };
-
-    auction.stop_if_time_is_over();
-
-    let encoded = match query {
-        State::Info => StateReply::Info(auction.info()),
-    }
-    .encode();
-
-    gstd::util::to_leak_ptr(encoded)
 }
 
 fn common_state() -> <AuctionMetadata as Metadata>::State {
