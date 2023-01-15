@@ -48,9 +48,6 @@ jobs:
           chmod +x gear
           ./gear --dev --tmp > /dev/null 2>&1  & echo "$$!" > gear.pid
           make full-test
-          kill `cat gear.pid`
-          rm gear
-          rm gear.pid
 
       - name: Upload artifacts
         if: github.event_name == 'push'
