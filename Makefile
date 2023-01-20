@@ -26,7 +26,7 @@ init:
 
 lint:
 	@echo ⚙️ Running the linter...
-	@cargo +nightly clippy -- -D warnings
+	@cargo +nightly clippy --workspace -- -D warnings
 	@cargo +nightly clippy \
 	--all-targets \
 	--workspace \

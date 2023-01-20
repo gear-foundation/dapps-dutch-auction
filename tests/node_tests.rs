@@ -40,7 +40,7 @@ async fn create_and_stop() -> Result<()> {
     let (message_id, program_id, _hash) = api
         .upload_program_bytes_by_path(
             NFT_PATH,
-            gclient::bytes_now(),
+            gclient::now_in_micros().to_le_bytes(),
             init_nft,
             gas_info.min_limit,
             0,
@@ -107,7 +107,7 @@ async fn create_and_stop() -> Result<()> {
     let (message_id, program_id, _hash) = api
         .upload_program(
             WASM_BINARY_OPT.to_vec(),
-            gclient::bytes_now(),
+            gclient::now_in_micros().to_le_bytes(),
             action_payload.clone(),
             gas_info.min_limit,
             0,
