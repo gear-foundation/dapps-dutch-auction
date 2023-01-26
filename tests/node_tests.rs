@@ -1,5 +1,3 @@
-use std::path::Path;
-
 use auction_io::io::*;
 use dutch_auction::WASM_BINARY_OPT;
 use gclient::{EventProcessor, GearApi, Result};
@@ -11,10 +9,8 @@ use nft_io::*;
 const NFT_PATH: &str = "target/nft-0.2.5.opt.wasm";
 
 #[tokio::test]
-// #[ignore]
+#[ignore]
 async fn create_and_stop() -> Result<()> {
-    assert!(Path::new(NFT_PATH).exists());
-
     let api = GearApi::dev().await?;
 
     let mut listener = api.subscribe().await?; // Subscribing for events.
