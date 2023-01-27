@@ -1,7 +1,6 @@
-use auction_io::io::*;
+use auction_io::auction::{Action, Error, Event};
 use gstd::{ActorId, Encode};
 use gtest::{Log, System};
-
 mod routines;
 use routines::*;
 
@@ -18,9 +17,9 @@ fn buy() {
 
     assert!(result.contains(&(
         USERS[1],
-        Event::Bought {
+        Ok::<Event, Error>(Event::Bought {
             price: 1_000_000_000,
-        }
+        })
         .encode()
     )));
 
@@ -53,7 +52,10 @@ fn buy_later_with_lower_price() {
     sys.spend_blocks(100_000);
     let result = auction.send_with_value(USERS[1], Action::Buy, 900_000_000);
 
-    assert!(result.contains(&(USERS[1], Event::Bought { price: 900_000_000 }.encode())));
+    assert!(result.contains(&(
+        USERS[1],
+        Ok::<Event, Error>(Event::Bought { price: 900_000_000 }).encode()
+    )));
 
     sys.claim_value_from_mailbox(USERS[0]);
 
@@ -118,11 +120,11 @@ fn create_auction_twice_after_time() {
 
     assert!(result.contains(&(
         USERS[1],
-        Event::AuctionStarted {
+        Ok::<Event, Error>(Event::AuctionStarted {
             token_owner: USERS[1].into(),
             price: 999_000_000,
             token_id: 0.into(),
-        }
+        })
         .encode()
     )));
 }
@@ -148,10 +150,10 @@ fn create_and_stop() {
 
     assert!(result.contains(&(
         owner_user,
-        Event::AuctionStoped {
+        Ok::<Event, Error>(Event::AuctionStoped {
             token_owner: owner_user.into(),
             token_id: 0.into(),
-        }
+        })
         .encode()
     )));
 }

@@ -1,4 +1,4 @@
-use auction_io::io::{Action, CreateConfig, Duration, Event};
+use auction_io::auction::{Action, CreateConfig, Duration, Error, Event};
 use gear_lib::non_fungible_token::token::{TokenId, TokenMetadata};
 use gstd::Encode;
 use gtest::{Log, Program, RunResult, System};
@@ -21,14 +21,14 @@ pub fn init(sys: &System) -> Program {
 
     init_nft(sys, owner_user);
     let result = update_auction(&auction_program, owner_user, 2, 1_000_000_000);
-    println!("{:?}", result.decoded_log::<Event>());
+    println!("{:?}", result.decoded_log::<Result<Event, Error>>());
     assert!(result.contains(&(
         owner_user,
-        Event::AuctionStarted {
+        Ok::<auction_io::auction::Event, Error>(Event::AuctionStarted {
             token_owner: owner_user.into(),
             price: 1_000_000_000,
             token_id: 0.into(),
-        }
+        })
         .encode()
     )));
 

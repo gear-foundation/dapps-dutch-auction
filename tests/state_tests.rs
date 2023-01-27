@@ -1,4 +1,4 @@
-use auction_io::{auction::*, io::Action};
+use auction_io::auction::*;
 use dutch_auction::state::{State, StateReply};
 use gtest::System;
 
