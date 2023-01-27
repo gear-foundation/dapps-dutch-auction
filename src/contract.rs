@@ -36,17 +36,18 @@ pub struct Auction {
 impl Auction {
     pub async fn buy(&mut self, transaction_id: TransactionId) -> Result<(Event, u128), Error> {
         if !matches!(self.status, Status::IsRunning) {
-            panic!("already bought or auction expired");
+            return Err(Error::AlreadyStopped);
         }
 
         if exec::block_timestamp() >= self.expires_at {
-            panic!("auction expired");
+            return Err(Error::Expired);
         }
 
         let price = self.token_price();
 
         if msg::value() < price {
-            panic!("value < price, {:?} < {:?}", msg::value(), price);
+            gstd::debug!("value < price, {:?} < {:?}", msg::value(), price);
+            return Err(Error::InsufficentMoney);
         }
 
         self.status = Status::Purchased { price };
@@ -54,7 +55,9 @@ impl Auction {
         let refund = msg::value() - price;
         let refund = if refund < 500 { 0 } else { refund };
 
-        if let Err(e) = msg::send_for_reply(
+        gstd::debug!("before Transfer NFT");
+
+        let reply = match msg::send_for_reply(
             self.nft.contract_id,
             NFTAction::Transfer {
                 to: msg::source(),
@@ -62,13 +65,26 @@ impl Auction {
                 transaction_id,
             },
             0,
-        )
-        .unwrap()
-        .await
-        {
-            gstd::debug!("{}", e);
-            return Err(Error::NftTransferFailed);
+        ) {
+            Ok(reply) => {
+                gstd::debug!("Send OK");
+                reply
+            }
+            Err(e) => {
+                gstd::debug!("Send Error {:?}", e);
+                return Err(Error::NftTransferFailed);
+            }
+        };
+
+        match reply.await {
+            Ok(_reply) => gstd::debug!("Reply Ok"),
+            Err(e) => {
+                gstd::debug!("Await Reply Error {:?}", e);
+                return Err(Error::NftTransferFailed);
+            }
         }
+
+        gstd::debug!("before Transfer Reward");
 
         if let Err(e) = msg::send(self.nft.owner, "REWARD", price) {
             gstd::debug!("{}", e);
@@ -89,16 +105,20 @@ impl Auction {
         self.starting_price - discount
     }
 
-    pub async fn renew_contract(&mut self, config: CreateConfig) -> Result<Event, Error> {
-        if self.is_active() {
-            panic!("already in use")
+    pub async fn renew_contract(
+        &mut self,
+        transaction_id: TransactionId,
+        config: &CreateConfig,
+    ) -> Result<Event, Error> {
+        if matches!(self.status, Status::IsRunning) {
+            return Err(Error::AlreadyRunning);
         }
 
         let minutes_count = config.duration.hours * 60 + config.duration.minutes;
         let duration_in_seconds = minutes_count * 60 + config.duration.seconds;
 
         if config.starting_price < config.discount_rate * (duration_in_seconds as u128) {
-            panic!("starting price < min");
+            return Err(Error::StartPriceLessThatMinimal);
         }
 
         self.validate_nft_approve(config.nft_contract_actor_id, config.token_id)
@@ -114,8 +134,24 @@ impl Auction {
         self.discount_rate = config.discount_rate;
         self.starting_price = config.starting_price;
 
+        if let Err(e) = msg::send_for_reply(
+            self.nft.contract_id,
+            NFTAction::Transfer {
+                transaction_id,
+                to: exec::program_id(),
+                token_id: self.nft.token_id,
+            },
+            0,
+        )
+        .unwrap()
+        .await
+        {
+            gstd::debug!("{:?}", e);
+            return Err(Error::NftTransferFailed);
+        }
+
         Ok(Event::AuctionStarted {
-            token_owner: self.nft.owner,
+            token_owner: self.owner,
             price: self.starting_price,
             token_id: self.nft.token_id,
         })
@@ -162,16 +198,25 @@ impl Auction {
         }
     }
 
-    pub fn is_active(&self) -> bool {
-        match self.status {
-            Status::None | Status::Purchased { .. } | Status::Expired | Status::Stopped => false,
-            Status::IsRunning => true,
-        }
-    }
-
-    pub fn force_stop(&mut self) -> Result<Event, Error> {
+    pub async fn force_stop(&mut self, transaction_id: TransactionId) -> Result<Event, Error> {
         if msg::source() != self.owner {
             return Err(Error::NotOwner);
+        }
+
+        if let Err(e) = msg::send_for_reply(
+            self.nft.contract_id,
+            NFTAction::Transfer {
+                transaction_id,
+                to: self.nft.owner,
+                token_id: self.nft.token_id,
+            },
+            0,
+        )
+        .unwrap()
+        .await
+        {
+            gstd::debug!("{:?}", e);
+            return Err(Error::NftTransferFailed);
         }
 
         self.status = Status::Stopped;
@@ -245,7 +290,9 @@ async fn main() {
         transaction_id
     };
 
-    let (result, value) = match action {
+    gstd::debug!("Action = {:?}, msg::value() = {}", action, msg::value());
+
+    let (result, value) = match &action {
         Action::Buy => {
             let reply = auction.buy(transaction_id).await;
             let result = match reply {
@@ -256,12 +303,12 @@ async fn main() {
             result
         }
         Action::Create(config) => {
-            let result = (auction.renew_contract(config).await, 0);
+            let result = (auction.renew_contract(transaction_id, config).await, 0);
             auction.transactions.remove(&msg_source);
             result
         }
         Action::ForceStop => {
-            let result = (auction.force_stop(), 0);
+            let result = (auction.force_stop(transaction_id).await, 0);
             auction.transactions.remove(&msg_source);
             result
         }

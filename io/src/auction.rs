@@ -84,4 +84,9 @@ pub enum Error {
     NftTransferFailed,
     RewardSendFailed,
     NotOwner,
+    AlreadyRunning,
+    StartPriceLessThatMinimal,
+    AlreadyStopped,
+    InsufficentMoney,
+    Expired,
 }
