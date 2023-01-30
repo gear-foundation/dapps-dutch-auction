@@ -9,4 +9,4 @@ gmeta = { git = "https://github.com/gear-tech/gear", features = ["codegen"] }
 auction-io = { path = "../io" }
 
 [build-dependencies]
-gear-wasm-builder = { git = "https://github.com/gear-tech/gear", features = ["metawasm"] }
+gear-wasm-builder = { git = "https://github.com/gear-tech/gear", features = ["metawasm"], branch = "stable" }
