@@ -134,7 +134,7 @@ impl Auction {
         self.discount_rate = config.discount_rate;
         self.starting_price = config.starting_price;
 
-        if let Err(e) = msg::send_for_reply(
+        msg::send_for_reply(
             self.nft.contract_id,
             NFTAction::Transfer {
                 transaction_id,
@@ -145,10 +145,10 @@ impl Auction {
         )
         .unwrap()
         .await
-        {
+        .map_err(|e| {
             gstd::debug!("{:?}", e);
-            return Err(Error::NftTransferFailed);
-        }
+            Error::NftTransferFailed
+        })?;
 
         Ok(Event::AuctionStarted {
             token_owner: self.owner,
@@ -271,9 +271,7 @@ async fn main() {
     }) = auction.transactions.get(&msg_source)
     {
         if action != *pend_action {
-            reply(r, 0).expect(
-                "Failed to encode or reply with `Result<NFTPixelboardEvent, NFTPixelboardError>`",
-            );
+            reply(r, 0).expect("Failed to encode or reply with `Result<Action, Error>`");
             return;
         }
         *tid
