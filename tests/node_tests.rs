@@ -6,7 +6,7 @@ use gstd::prelude::*;
 use gstd::{ActorId, Encode};
 use nft_io::*;
 
-const NFT_PATH: &str = "target/nft-0.2.8.opt.wasm";
+const NFT_PATH: &str = "target/nft-0.2.5.opt.wasm";
 
 #[tokio::test]
 #[ignore]
