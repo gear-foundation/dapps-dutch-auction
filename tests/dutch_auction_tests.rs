@@ -37,6 +37,9 @@ fn buy() {
 
     sys.claim_value_from_mailbox(USERS[0]);
 
+    auction.send_with_value(USERS[0], Action::Reward, 0);
+    sys.claim_value_from_mailbox(USERS[0]);
+
     let buyer_balance = sys.balance_of(USERS[1]);
     let seller_balance = sys.balance_of(USERS[0]);
 
@@ -57,6 +60,9 @@ fn buy_later_with_lower_price() {
         Ok::<Event, Error>(Event::Bought { price: 900_000_000 }).encode()
     )));
 
+    sys.claim_value_from_mailbox(USERS[0]);
+
+    auction.send_with_value(USERS[0], Action::Reward, 0);
     sys.claim_value_from_mailbox(USERS[0]);
 
     let buyer_balance = sys.balance_of(USERS[1]);
@@ -103,7 +109,7 @@ fn buy_with_less_money() {
 
     assert!(result.contains(&(
         USERS[1],
-        Err::<Event, Error>(Error::InsufficentMoney).encode()
+        Err::<Event, Error>(Error::InsufficientMoney).encode()
     )));
 }
 
@@ -136,7 +142,7 @@ fn create_auction_twice_after_time_and_stop() {
 
     assert!(result.contains(&(
         owner_user,
-        Ok::<Event, Error>(Event::AuctionStoped {
+        Ok::<Event, Error>(Event::AuctionStopped {
             token_owner: owner_user.into(),
             token_id: 0.into(),
         })
@@ -168,7 +174,7 @@ fn create_and_stop() {
 
     assert!(result.contains(&(
         owner_user,
-        Ok::<Event, Error>(Event::AuctionStoped {
+        Ok::<Event, Error>(Event::AuctionStopped {
             token_owner: owner_user.into(),
             token_id: 0.into(),
         })

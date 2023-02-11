@@ -136,7 +136,7 @@ impl Auction {
             },
             0,
         )
-        .unwrap()
+        .expect("Send NFTAction::Transfer at renew contract")
         .await
         .map_err(|e| {
             gstd::debug!("{:?}", e);
@@ -224,7 +224,7 @@ impl Auction {
             },
             0,
         )
-        .unwrap()
+        .expect("Can't send NFTAction::Transfer at force stop")
         .await
         {
             gstd::debug!("{:?}", e);
