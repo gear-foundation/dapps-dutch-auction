@@ -47,7 +47,7 @@ impl Auction {
 
         if msg::value() < price {
             gstd::debug!("value < price, {:?} < {:?}", msg::value(), price);
-            return Err(Error::InsufficentMoney);
+            return Err(Error::InsufficientMoney);
         }
 
         self.status = Status::Purchased { price };
@@ -82,13 +82,6 @@ impl Auction {
                 gstd::debug!("Await Reply Error {:?}", e);
                 return Err(Error::NftTransferFailed);
             }
-        }
-
-        gstd::debug!("before Transfer Reward");
-
-        if let Err(e) = msg::send(self.nft.owner, "REWARD", price) {
-            gstd::debug!("{}", e);
-            return Err(Error::RewardSendFailed);
         }
 
         Ok((Event::Bought { price }, refund))
@@ -157,6 +150,25 @@ impl Auction {
         })
     }
 
+    pub async fn reward(&mut self) -> Result<Event, Error> {
+        gstd::debug!("before Transfer Reward");
+        let price = match self.status {
+            Status::Purchased { price } => price,
+            _ => return Err(Error::WrongState),
+        };
+        if msg::source().ne(&self.nft.owner) {
+            gstd::debug!("BAD REWARDER: {:?}", msg::source());
+            return Err(Error::IncorrectRewarder);
+        }
+
+        if let Err(e) = msg::send(self.nft.owner, "REWARD", price) {
+            gstd::debug!("{}", e);
+            return Err(Error::RewardSendFailed);
+        }
+        gstd::debug!("SUCCESSFULLY REWARDED {}", price);
+        Ok(Event::Rewarded { price })
+    }
+
     pub async fn get_token_owner(contract_id: ActorId, token_id: U256) -> ActorId {
         let reply: NFTEvent = msg::send_for_reply_as(contract_id, NFTAction::Owner { token_id }, 0)
             .expect("Can't send message")
@@ -221,7 +233,7 @@ impl Auction {
 
         self.status = Status::Stopped;
 
-        Ok(Event::AuctionStoped {
+        Ok(Event::AuctionStopped {
             token_owner: self.owner,
             token_id: self.nft.token_id,
         })
@@ -307,6 +319,11 @@ async fn main() {
         }
         Action::ForceStop => {
             let result = (auction.force_stop(transaction_id).await, 0);
+            auction.transactions.remove(&msg_source);
+            result
+        }
+        Action::Reward => {
+            let result = (auction.reward().await, 0);
             auction.transactions.remove(&msg_source);
             result
         }

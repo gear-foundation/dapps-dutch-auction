@@ -43,6 +43,7 @@ pub enum Action {
     Buy,
     Create(CreateConfig),
     ForceStop,
+    Reward,
 }
 
 #[derive(Debug, Encode, Decode, TypeInfo)]
@@ -55,9 +56,12 @@ pub enum Event {
     Bought {
         price: u128,
     },
-    AuctionStoped {
+    AuctionStopped {
         token_owner: ActorId,
         token_id: U256,
+    },
+    Rewarded {
+        price: u128,
     },
 }
 
@@ -87,6 +91,8 @@ pub enum Error {
     AlreadyRunning,
     StartPriceLessThatMinimal,
     AlreadyStopped,
-    InsufficentMoney,
+    InsufficientMoney,
     Expired,
+    WrongState,
+    IncorrectRewarder,
 }
