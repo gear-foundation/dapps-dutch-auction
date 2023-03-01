@@ -1,4 +1,3 @@
-use crate::state::{State, StateReply};
 use auction_io::auction::{
     Action, AuctionInfo, CreateConfig, Error, Event, Status, Transaction, TransactionId,
 };
@@ -113,16 +112,17 @@ impl Auction {
         if config.starting_price < config.discount_rate * (duration_in_seconds as u128) {
             return Err(Error::StartPriceLessThatMinimal);
         }
-
+        gstd::debug!("renew() before validate()");
         self.validate_nft_approve(config.nft_contract_actor_id, config.token_id)
-            .await;
-
+            .await?;
+        gstd::debug!("renew() after validate()");
         self.status = Status::IsRunning;
         self.started_at = exec::block_timestamp();
         self.expires_at = self.started_at + duration_in_seconds * 1000;
         self.nft.token_id = config.token_id;
         self.nft.contract_id = config.nft_contract_actor_id;
-        self.nft.owner = Self::get_token_owner(config.nft_contract_actor_id, config.token_id).await;
+        self.nft.owner =
+            Self::get_token_owner(config.nft_contract_actor_id, config.token_id).await?;
 
         self.discount_rate = config.discount_rate;
         self.starting_price = config.starting_price;
@@ -139,10 +139,10 @@ impl Auction {
         .expect("Send NFTAction::Transfer at renew contract")
         .await
         .map_err(|e| {
-            gstd::debug!("{:?}", e);
+            gstd::debug!("NFT Transfer Failed: {:?}", e);
             Error::NftTransferFailed
         })?;
-
+        gstd::debug!("renew() after send NFTAction::Transfer");
         Ok(Event::AuctionStarted {
             token_owner: self.owner,
             price: self.starting_price,
@@ -169,20 +169,30 @@ impl Auction {
         Ok(Event::Rewarded { price })
     }
 
-    pub async fn get_token_owner(contract_id: ActorId, token_id: U256) -> ActorId {
+    pub async fn get_token_owner(contract_id: ActorId, token_id: U256) -> Result<ActorId, Error> {
         let reply: NFTEvent = msg::send_for_reply_as(contract_id, NFTAction::Owner { token_id }, 0)
-            .expect("Can't send message")
+            .map_err(|e| {
+                gstd::debug!("Can't send message: {:?}", e);
+                Error::SendingError
+            })?
             .await
-            .expect("Unable to decode `NFTEvent`");
+            .map_err(|e| {
+                gstd::debug!("NFT Owner Failed (decode?): {:?}", e);
+                Error::NftOwnerFailed
+            })?;
 
         if let NFTEvent::Owner { owner, .. } = reply {
-            owner
+            Ok(owner)
         } else {
-            panic!("Wrong received message!")
+            Err(Error::WrongReply)
         }
     }
 
-    pub async fn validate_nft_approve(&self, contract_id: ActorId, token_id: U256) {
+    pub async fn validate_nft_approve(
+        &self,
+        contract_id: ActorId,
+        token_id: U256,
+    ) -> Result<(), Error> {
         let reply: NFTEvent = msg::send_for_reply_as(
             contract_id,
             NFTAction::IsApproved {
@@ -191,17 +201,24 @@ impl Auction {
             },
             0,
         )
-        .expect("Can't send message")
+        .map_err(|e| {
+            gstd::debug!("Can't send message: {:?}", e);
+            Error::SendingError
+        })?
         .await
-        .expect("Unable to decode `NFTEvent`");
+        .map_err(|e| {
+            gstd::debug!("NFT Not Approved: {:?}", e);
+            Error::NftNotApproved
+        })?;
 
         if let NFTEvent::IsApproved { approved, .. } = reply {
             if !approved {
-                panic!("You must approve your NFT to this contract before")
+                return Err(Error::NftNotApproved);
             }
         } else {
-            panic!("Wrong received message!")
+            return Err(Error::WrongReply);
         }
+        Ok(())
     }
 
     pub fn stop_if_time_is_over(&mut self) {
@@ -239,7 +256,8 @@ impl Auction {
         })
     }
 
-    pub fn info(&self) -> AuctionInfo {
+    pub fn info(&mut self) -> AuctionInfo {
+        self.stop_if_time_is_over();
         AuctionInfo {
             nft_contract_actor_id: self.nft.contract_id,
             token_id: self.nft.token_id,
@@ -356,19 +374,4 @@ extern "C" fn metahash() {
 
 fn reply(payload: impl Encode, value: u128) -> GstdResult<MessageId> {
     msg::reply(payload, value)
-}
-
-#[no_mangle]
-extern "C" fn meta_state() -> *mut [i32; 2] {
-    let query: State = msg::load().expect("failed to decode input argument");
-    let auction: &mut Auction = unsafe { AUCTION.get_or_insert(Auction::default()) };
-
-    auction.stop_if_time_is_over();
-
-    let encoded = match query {
-        State::Info => StateReply::Info(auction.info()),
-    }
-    .encode();
-
-    gstd::util::to_leak_ptr(encoded)
 }

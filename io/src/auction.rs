@@ -85,7 +85,12 @@ pub struct CreateConfig {
 pub enum Error {
     BuyError,
     PreviousTxMustBeCompleted,
+    SendingError,
+    NftValidateFailed,
     NftTransferFailed,
+    NftOwnerFailed,
+    NftNotApproved,
+    WrongReply,
     RewardSendFailed,
     NotOwner,
     AlreadyRunning,
