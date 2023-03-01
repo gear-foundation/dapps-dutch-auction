@@ -170,7 +170,7 @@ dependencies = [
 
 [[package]]
 name = "auction-io"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "gmeta",
  "gstd",
@@ -182,7 +182,7 @@ dependencies = [
 
 [[package]]
 name = "auction-state"
-version = "0.1.0"
+version = "0.1.2"
 dependencies = [
  "auction-io",
  "gear-wasm-builder",
@@ -736,7 +736,7 @@ checksum = "9ea835d29036a4087793836fa931b08837ad5e957da9e23886b29586fb9b6650"
 
 [[package]]
 name = "dutch-auction"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "auction-io",
  "gclient",
@@ -2052,8 +2052,8 @@ dependencies = [
 
 [[package]]
 name = "nft-io"
-version = "0.2.10"
-source = "git+https://github.com/gear-dapps/non-fungible-token.git?tag=0.2.10#250ca2294274522d50935f78a541da6ba6b29c16"
+version = "0.2.9"
+source = "git+https://github.com/gear-dapps/non-fungible-token.git?tag=0.2.9#faa68e576f29de328a2a4020a4dd9ebc3372f43c"
 dependencies = [
  "gear-lib",
  "gmeta",

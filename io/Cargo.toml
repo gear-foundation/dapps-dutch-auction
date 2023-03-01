@@ -1,6 +1,6 @@
 [package]
 name = "auction-io"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 license = "MIT"
 authors = ["Gear Technologies"]
@@ -11,4 +11,4 @@ gstd = { git = "https://github.com/gear-tech/gear.git", branch = "testnet" }
 primitive-types = { version = "0.12.1", default-features = false, features = ["scale-info"] }
 scale-info = { version = "2", default-features = false }
 parity-scale-codec = { version = "3", default-features = false }
-nft-io = { git = "https://github.com/gear-dapps/non-fungible-token.git", tag = "0.2.10" }
+nft-io = { git = "https://github.com/gear-dapps/non-fungible-token.git", tag = "0.2.9" }

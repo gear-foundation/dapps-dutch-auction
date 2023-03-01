@@ -37,7 +37,7 @@ pre-commit: fmt lint full-test
 
 deps:
 	@echo ⚙️ Downloading dependencies...
-	@if [ ! -f "./target/nft-0.2.10.opt.wasm" ]; then wget "https://github.com/gear-dapps/non-fungible-token/releases/download/0.2.10/nft-0.2.10.opt.wasm" -O "./target/nft-0.2.10.opt.wasm"; fi
+	@if [ ! -f "./target/nft-0.2.9.opt.wasm" ]; then wget "https://github.com/gear-dapps/non-fungible-token/releases/download/0.2.9/nft-0.2.9.opt.wasm" -O "./target/nft-0.2.9.opt.wasm"; fi
 
 test: deps
 	@echo ⚙️ Running unit tests...
