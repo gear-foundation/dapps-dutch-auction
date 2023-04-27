@@ -9,7 +9,7 @@ use nft_io::NFTEvent;
 
 pub const USERS: &[u64] = &[4, 5, 6];
 #[allow(dead_code)]
-pub const DURATION: u32 = 7 * 24 * 60 * 60 * 1000;
+pub const DURATION: u32 = 169 * 60 * 60;
 
 pub fn init(sys: &System) -> Program {
     USERS
