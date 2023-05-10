@@ -17,7 +17,7 @@ gmeta = { git = "https://github.com/gear-tech/gear", rev = "5c685d0f15c412ab6ee0
 gtest = { git = "https://github.com/gear-tech/gear.git", rev = "5c685d0f15c412ab6ee019ceaf7ce084426dfb68" }
 sp-core = { git = "https://github.com/gear-tech/substrate.git", rev = "36699c4478ce8ae05517bb42a1b115403313e083" }
 gclient = { git = "https://github.com/gear-tech/gear.git", rev = "5c685d0f15c412ab6ee019ceaf7ce084426dfb68" }
-tokio = { version = "1.24.2", features = ["full"] }
+tokio = { version = "1.28.1", features = ["full"] }
 
 [build-dependencies]
 gear-wasm-builder = { git = "https://github.com/gear-tech/gear.git", rev = "5c685d0f15c412ab6ee019ceaf7ce084426dfb68" }
