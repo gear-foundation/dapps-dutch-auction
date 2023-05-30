@@ -6,12 +6,12 @@ use gstd::prelude::*;
 use gstd::{ActorId, Encode};
 use nft_io::*;
 
-const NFT_PATH: &str = "target/nft-0.2.10.opt.wasm";
+const NFT_PATH: &str = "target/nft.opt.wasm";
 
 #[tokio::test]
 #[ignore]
 async fn create_and_stop() -> Result<()> {
-    let api = GearApi::dev().await?;
+    let api = GearApi::dev_from_path(env!("GEAR_NODE_PATH")).await?;
 
     let mut listener = api.subscribe().await?; // Subscribing for events.
 
