@@ -28,7 +28,7 @@ test: deps
 
 full-test: deps
 	@echo ⚙️ Running all tests...
-	@cargo t -Fbinary-vendor -- --include-ignored
+	@cargo t -Fbinary-vendor -- --include-ignored --test-threads=1
 
 deps:
 	@echo ⚙️ Downloading dependencies...

@@ -28,6 +28,9 @@ pub enum Status {
     Purchased {
         price: u128,
     },
+    Rewarded {
+        price: u128,
+    },
     Expired,
     Stopped,
 }
@@ -90,6 +93,7 @@ pub enum Error {
     NftTransferFailed,
     NftOwnerFailed,
     NftNotApproved,
+    NotRewarded,
     WrongReply,
     RewardSendFailed,
     NotOwner,
