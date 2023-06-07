@@ -1,0 +1,1 @@
+window.ALL_CRATES = ["auction_io","auction_state","dutch_auction"];

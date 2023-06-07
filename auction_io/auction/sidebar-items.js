@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["Action","Error","Event","Status"],"struct":["AuctionInfo","CreateConfig","Duration","Transaction"],"type":["TransactionId"]};
