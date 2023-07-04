@@ -2406,6 +2406,7 @@ dependencies = [
 [[package]]
 name = "nft"
 version = "0.2.12"
+source = "git+https://github.com/gear-dapps/non-fungible-token?branch=update-deps#54f541d838ab52e0283b13fe29a6c69973a678df"
 dependencies = [
  "gear-lib",
  "gear-lib-derive",
@@ -2421,6 +2422,7 @@ dependencies = [
 [[package]]
 name = "nft-io"
 version = "0.2.12"
+source = "git+https://github.com/gear-dapps/non-fungible-token?branch=update-deps#54f541d838ab52e0283b13fe29a6c69973a678df"
 dependencies = [
  "gear-lib",
  "gmeta",

@@ -37,10 +37,8 @@ gclient = { git = "https://github.com/gear-tech/gear", rev = "946ac47" }
 gear-wasm-builder = { git = "https://github.com/gear-tech/gear", rev = "946ac47" }
 gmeta = { git = "https://github.com/gear-tech/gear", rev = "946ac47" }
 gear-lib = { git = "https://github.com/gear-dapps/gear-lib", branch = "update-deps" }
-#nft-io = { git = "https://github.com/gear-dapps/non-fungible-token", branch = "update-deps" }
-#nft = { git = "https://github.com/gear-dapps/non-fungible-token", branch = "update-deps" }
-nft-io = { path = "../non-fungible-token/io" }
-nft = { path = "../non-fungible-token" }
+nft-io = { git = "https://github.com/gear-dapps/non-fungible-token", branch = "update-deps" }
+nft = { git = "https://github.com/gear-dapps/non-fungible-token", branch = "update-deps" }
 auction-io.path = "io"
 primitive-types = { version = "0.12", default-features = false }
 parity-scale-codec = { version = "3", default-features = false }
